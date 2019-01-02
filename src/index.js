@@ -6,7 +6,7 @@ import Markup from 'telegraf/markup';
 import Firefly from './firefly';
 
 import setDefaultAccountWizard from './wizards/setDefaultAccountWizard';
-  'setDefaultAccount',
+import payMoneyWizard from './wizards/payMoneyWizard';
 
 const bot = new Telegraf(process.env.BOT_TOKEN, {
   getSessionKey: (ctx) => {
@@ -19,7 +19,10 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
     return null;
   },
 });
-const stage = new Stage([ setDefaultAccountWizard ]);
+const stage = new Stage([
+  setDefaultAccountWizard,
+  payMoneyWizard,
+]);
 
 bot.use(Session());
 bot.use(stage.middleware());
@@ -36,6 +39,10 @@ bot.command('getDefault', ctx => {
     ctx.reply('No default selected.');
   }
 });
+
 bot.command('setDefault', ctx => ctx.scene.enter('setDefaultAccount'));
+
+// Bot hears a message, starting with at least one digit, optionally followed by a dot and two digits
+bot.hears(/^\d+(\.\d{0,2})?/gi, (ctx) => ctx.scene.enter('payMoney'));
 
 bot.startPolling();
