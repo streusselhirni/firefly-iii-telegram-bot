@@ -9,10 +9,13 @@
     "telegraf": "^3.25.5"
   },
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js"
+    "start": "nodemon --exec babel-node src/index.js",
+    "clean": "rm -rf dist",
+    "build": "yarn clean && babel -d ./dist ./src"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-3": "^6.24.1",
     "nodemon": "^1.18.9"

@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import 'dotenv/config';
 import Telegraf from 'telegraf';
 import Session from 'telegraf/session';
