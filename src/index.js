@@ -6,7 +6,9 @@ import Markup from 'telegraf/markup';
 import Firefly from './firefly';
 
 import setDefaultAccountWizard from './wizards/setDefaultAccountWizard';
+import setCashAccount from './wizards/setCashAccount';
 import payMoneyWizard from './wizards/payMoneyWizard';
+
 
 const bot = new Telegraf(process.env.BOT_TOKEN, {
   getSessionKey: (ctx) => {
@@ -21,6 +23,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
 });
 const stage = new Stage([
   setDefaultAccountWizard,
+  setCashAccount,
   payMoneyWizard,
 ]);
 
@@ -31,6 +34,8 @@ bot.start(ctx => {
   ctx.reply(`Hi ${ ctx.from.first_name }. Let's manage your money!`);
 });
 
+bot.command('setDefault', ctx => ctx.scene.enter('setDefaultAccount'));
+bot.command('setCash', ctx => ctx.scene.enter('setCashAccount'));
 bot.command('getDefault', ctx => {
   if (ctx.session.defaultAccount) {
     ctx.reply(ctx.session.defaultAccount);
@@ -39,10 +44,18 @@ bot.command('getDefault', ctx => {
     ctx.reply('No default selected.');
   }
 });
-
-bot.command('setDefault', ctx => ctx.scene.enter('setDefaultAccount'));
+bot.command('getCash', ctx => {
+  if (ctx.session.cashAccount) {
+    ctx.reply(ctx.session.cashAccount);
+  }
+  else {
+    ctx.reply('No cash account selected.');
+  }
+});
 
 // Bot hears a message, starting with at least one digit, optionally followed by a dot and two digits
 bot.hears(/^\d+(\.\d{0,2})?/gi, (ctx) => ctx.scene.enter('payMoney'));
+
+// TODO: Take money (from account to cash), Receive money (to any account)
 
 bot.startPolling();
