@@ -27,6 +27,12 @@ export default class Firefly {
     return data;
   }
 
+  static async getAssetAccountByName(name) {
+    if (name === undefined) name = '';
+    let { data } = await this.getAssetAccounts();
+    return data.find((el) => el.attributes.name.toLowerCase() === name.toLowerCase());
+  }
+
   static payMoney(amount, accountId, description) {
     let date = (new Date()).getDate();
     if (date < 10) {
