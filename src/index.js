@@ -8,7 +8,7 @@ import Firefly from './firefly';
 import setDefaultAccountWizard from './wizards/setDefaultAccountWizard';
 import setCashAccount from './wizards/setCashAccount';
 import payMoneyWizard from './wizards/payMoneyWizard';
-
+import takeMoneyWizard from './wizards/takeMoneyWizard';
 
 const bot = new Telegraf(process.env.BOT_TOKEN, {
   getSessionKey: (ctx) => {
@@ -25,6 +25,7 @@ const stage = new Stage([
   setDefaultAccountWizard,
   setCashAccount,
   payMoneyWizard,
+  takeMoneyWizard
 ]);
 
 bot.use(Session());
@@ -55,6 +56,9 @@ bot.command('getCash', ctx => {
 
 // Bot hears a message, starting with at least one digit, optionally followed by a dot and two digits
 bot.hears(/^\d+(\.\d{0,2})?/gi, (ctx) => ctx.scene.enter('payMoney'));
+
+// Bot hears a message, starting with take and then a currency ammount
+bot.hears(/[Tt]ake\s(\d+(\.\d{0,2})?)/g, (ctx) => ctx.scene.enter('takeMoney'))
 
 // TODO: Take money (from account to cash), Receive money (to any account)
 

@@ -33,7 +33,7 @@ export default class Firefly {
     return data.find((el) => el.attributes.name.toLowerCase() === name.toLowerCase());
   }
 
-  static payMoney(amount, accountId, description) {
+  static getToday() {
     let date = (new Date()).getDate();
     if (date < 10) {
       date = '0' + date.toString();
@@ -44,15 +44,33 @@ export default class Firefly {
     }
     let year = (new Date()).getFullYear().toString();
 
-    let datestring = year + '-' + month + '-' + date;
+    return (year + '-' + month + '-' + date);
+  }
 
+  static payMoney(amount, accountId, description) {
     return api.post('transactions', {
       'type': 'withdrawal',
       'description': description,
-      'date': datestring,
+      'date': this.getToday(),
       'transactions': [
         { 'amount': amount, 'source_id': accountId },
       ],
     });
+  }
+
+  static async takeMoney(amount, sourceId, targetId) {
+    let res = await api.post('transactions', {
+      'type': 'transfer',
+      'description': 'Geld abheben',
+      'date': this.getToday(),
+      'transactions': [
+        {
+          'amount': amount,
+          'source_id': sourceId,
+          'destination_id': targetId,
+        },
+      ],
+    });
+    return res;
   }
 }

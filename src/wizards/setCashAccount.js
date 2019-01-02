@@ -41,7 +41,7 @@ export default new WizardScene(
     }
     if (ctx.message.text === 'Yes') {
       ctx.session.cashAccount = ctx.wizard.state.chosenAccount;
-      ctx.reply(`I set your cash account to ${ ctx.session.defaultAccount.name }`);
+      ctx.reply(`I set your cash account to ${ ctx.session.cashAccount.name }`);
     }
     return ctx.scene.leave();
   }
