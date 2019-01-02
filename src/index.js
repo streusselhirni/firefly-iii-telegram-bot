@@ -8,18 +8,19 @@ import Firefly from './firefly';
 
 const setDefaultAccount = new WizardScene(
   'setDefaultAccount',
-  ctx => {
+  async ctx => {
     ctx.reply('Let me check your accounts...');
-    Firefly.getAssetAccounts().then((res) => {
-      ctx.wizard.state.accounts = [];
-      ctx.wizard.state.ids = [];
-      res.data.data.forEach((el) => {
-        ctx.wizard.state.accounts.push(el.attributes.name);
-        ctx.wizard.state.ids.push(el.id);
-      });
+    let { data } = await Firefly.getAssetAccounts();
 
-      ctx.reply('Which is your default account?', Markup.keyboard(ctx.wizard.state.accounts).oneTime().extra());
+    ctx.wizard.state.accounts = [];
+    ctx.wizard.state.ids = [];
+    data.forEach((el) => {
+      ctx.wizard.state.accounts.push(el.attributes.name);
+      ctx.wizard.state.ids.push(el.id);
     });
+
+    ctx.reply('Which is your default account?', Markup.keyboard(ctx.wizard.state.accounts).oneTime().extra());
+
     return ctx.wizard.next();
   },
   ctx => {
