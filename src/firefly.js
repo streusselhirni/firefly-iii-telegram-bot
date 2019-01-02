@@ -71,6 +71,22 @@ export default class Firefly {
         },
       ],
     });
-    return res;
+    return res.status;
+  }
+
+  static async receiveMoney(amount, sourceName, targetId) {
+    let res = await api.post('transactions', {
+      'type': 'deposit',
+      'description': 'Geld erhalten',
+      'date': this.getToday(),
+      'transactions': [
+        {
+          'amount': amount,
+          'source_name': sourceName,
+          'destination_id': targetId,
+        },
+      ],
+    });
+    return res.status;
   }
 }

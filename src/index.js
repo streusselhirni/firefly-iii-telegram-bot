@@ -2,13 +2,12 @@ import 'dotenv/config';
 import Telegraf from 'telegraf';
 import Session from 'telegraf/session';
 import Stage from 'telegraf/stage';
-import Markup from 'telegraf/markup';
-import Firefly from './firefly';
 
 import setDefaultAccountWizard from './wizards/setDefaultAccountWizard';
 import setCashAccount from './wizards/setCashAccount';
 import payMoneyWizard from './wizards/payMoneyWizard';
 import takeMoneyWizard from './wizards/takeMoneyWizard';
+import receiveMoneyWizard from './wizards/reveiveMoneyWizard';
 
 const bot = new Telegraf(process.env.BOT_TOKEN, {
   getSessionKey: (ctx) => {
@@ -25,7 +24,8 @@ const stage = new Stage([
   setDefaultAccountWizard,
   setCashAccount,
   payMoneyWizard,
-  takeMoneyWizard
+  takeMoneyWizard,
+  receiveMoneyWizard,
 ]);
 
 bot.use(Session());
@@ -58,8 +58,8 @@ bot.command('getCash', ctx => {
 bot.hears(/^\d+(\.\d{0,2})?/gi, (ctx) => ctx.scene.enter('payMoney'));
 
 // Bot hears a message, starting with take and then a currency ammount
-bot.hears(/[Tt]ake\s(\d+(\.\d{0,2})?)/g, (ctx) => ctx.scene.enter('takeMoney'))
+bot.hears(/^[Tt]ake\s(\d+(\.\d{0,2})?)/g, (ctx) => ctx.scene.enter('takeMoney'));
 
-// TODO: Take money (from account to cash), Receive money (to any account)
+bot.hears(/^[Rr]eceived/g, (ctx) => ctx.scene.enter('receiveMoney'));
 
 bot.startPolling();

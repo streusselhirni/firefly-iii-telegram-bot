@@ -50,7 +50,7 @@ export default new WizardScene(
       return ctx.scene.leave();
     }
     let res = await Firefly.takeMoney(ctx.wizard.state.amount, ctx.wizard.state.acc.id, ctx.session.cashAccount.id);
-    if (res.status) {
+    if (res === 200) {
       ctx.reply(`Took ${ ctx.wizard.state.amount } from ${ ctx.wizard.state.acc.name }.`);
     }
     else {
