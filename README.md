@@ -32,7 +32,7 @@ OAUTH_TOKEN=thisisn0r34ltokenbutyoursmightlooksimilarjustwithmoredigitsandsymbol
 ```
 
 ### Start the bot
-To start the bot, you need to copy the files within `dist` to your server.
+To start the bot, you need to copy the files within `dist` and your `.env` file to your server.
 Then just run `node index.js` to start the bot.
 
 You might want to use a Node.JS process manager like [pm2](http://pm2.keymetrics.io).
